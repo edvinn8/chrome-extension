@@ -1,7 +1,6 @@
-console.log('sascdsad aaaaAAAAAAAAAAAAAAA  a a a  ')
-
 let counter = 0
 let parsedCommentsCount = 0
+let retries = 0
 
 function getCommentCount() {
   const comments = [
@@ -40,10 +39,10 @@ function getCommentCount() {
 }
 
 function fetchAndUploadComments() {
-  const comments = [
+  const commentsToProcess = [
     ...document.getElementsByClassName('style-scope ytd-comment-renderer')
   ]
-  const all = comments
+  const all = commentsToProcess
     .filter((el) => el.tagName === 'YT-FORMATTED-STRING')
     .map((item, index) => {
       let res = ''
@@ -63,14 +62,14 @@ function fetchAndUploadComments() {
     })
     .filter((s) => !!s)
   const commentsString = all.join('\n')
-  const commentsArray = []
+  const comments = []
 
   for (let i = 0; i < all.length; i = i + 2) {
     const element = {
       user: all[i],
       message: all[i + 1]
     }
-    commentsArray.push(element)
+    comments.push(element)
   }
   // console.log(commentsString)
   // console.log(commentsArray)
@@ -79,11 +78,17 @@ function fetchAndUploadComments() {
   if (id.includes('&')) {
     id = id.split('&').shift()
   }
+
+  let title = document.title
+  title = title.startsWith('(')
+    ? title.trim().substring(4, title.length)
+    : title.trim()
+
   const stats = {
     url,
     id,
-    title: document.title,
-    comments: commentsArray
+    title,
+    comments
   }
 
   fetch('https://processdata-lbp2t5jgca-ew.a.run.app', {
@@ -98,8 +103,6 @@ function fetchAndUploadComments() {
   console.log(stats)
   console.log('DONE!!!')
 }
-
-let retries = 0
 
 //initial delay
 setTimeout(() => {
