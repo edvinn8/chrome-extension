@@ -6,17 +6,28 @@
 	"permissions": [
 		"contextMenus",
 		"notifications",
-		"storage"
+		"storage",
+		"activeTab",
+		"scripting"
 	],
 	"background": {
-	  "service_worker": "background.js"
+		"service_worker": "background.js"
 	},
+	"content_scripts": [
+		{
+			"matches": [
+				"http://www.youtube.com/watch*",
+				"https://www.youtube.com/watch*"
+			],
+			"js": [
+				"myscript.js"
+			]
+		}
+	],
+	"host_permissions": [
+		"https://www.youtube.com/*"
+	],
 	"action": {
-	  "default_popup": "popup.html",
-	  "default_icon": {
-		"48": "/assets/icons/48.png",
-		"128": "/assets/icons/128.png"
-	  }
 	},
 	"icons": {
 		"48": "/assets/icons/48.png",
